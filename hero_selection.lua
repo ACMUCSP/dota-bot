@@ -66,8 +66,7 @@ function Think()
 	local otherTeam = GetTeamPlayers(OtherTeam(myTeamNo));
 
     SelectHero(myTeam[1], DEFAULT_HERO);
-
-	for i=2,5 do
+	for i=2,4 do
 		local name = GetSelectedHeroName(otherTeam[i]);
 		if (name ~= '') then
             local counter_name = counter[name];
@@ -77,6 +76,7 @@ function Think()
 			SelectHero(myTeam[i], counter_name);
         end
     end
+    SelectHero(myTeam[5], DEFAULT_HERO);
 end
 
 
