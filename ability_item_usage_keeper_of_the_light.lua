@@ -1,3 +1,5 @@
+local lastTime = 0;
+
 function AbilityUsageThink()
     local npcBot = GetBot();
 
@@ -9,7 +11,12 @@ function AbilityUsageThink()
 
     local creeps = npcBot:GetNearbyCreeps(1500, true)
 
-    if wave:IsFullyCastable() and npcBot:GetMana() > wave:GetManaCost() and npcBot:GetActiveMode() ~= BOT_MODE_RETREAT then
+    if DotaTime() < lastTime + 2 then
+        return;
+    end
+
+    if wave:IsFullyCastable() and not wave:IsChanneling()
+            and npcBot:GetMana() > wave:GetManaCost() and npcBot:GetActiveMode() ~= BOT_MODE_RETREAT then
         if #creeps >= 3 then
             local neutralCreeps = 0;
             local castTarget;
@@ -23,7 +30,8 @@ function AbilityUsageThink()
                 end
             end
             if castTarget ~= nil and #creeps - neutralCreeps > 0 then
-                print('WAVE!');
+                npcBot:Action_Chat('Wave!', false);
+                lastTime = DotaTime();
                 return npcBot:Action_UseAbilityOnLocation(wave, castTarget:GetLocation());
             end
         end
@@ -33,7 +41,8 @@ function AbilityUsageThink()
     if mana:IsFullyCastable() and npcBot:GetMana() > mana:GetManaCost() then
         local target = heroes_aliados_cercanos(npcBot, mana:GetCastRange());
         if target ~= nil then
-            print('MANA!');
+            npcBot:Action_Chat('Mana!', false);
+            lastTime = DotaTime();
             return npcBot:Action_UseAbilityOnEntity(mana, target);
         end
     end
