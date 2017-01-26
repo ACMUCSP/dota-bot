@@ -9,7 +9,7 @@ function AbilityUsageThink()
 
     local creeps = npcBot:GetNearbyCreeps(1500, true)
 
-    if wave:IsFullyCastable() and npcBot:GetMana() > mana:GetManaCost() and npcBot:GetActiveMode() ~= BOT_MODE_RETREAT then
+    if wave:IsFullyCastable() and npcBot:GetMana() > wave:GetManaCost() and npcBot:GetActiveMode() ~= BOT_MODE_RETREAT then
         if #creeps >= 3 then
             local neutralCreeps = 0;
             local castTarget;
@@ -30,7 +30,7 @@ function AbilityUsageThink()
     end
 
 
-    if mana:IsFullyCastable() then
+    if mana:IsFullyCastable() and npcBot:GetMana() > mana:GetManaCost() then
         local target = heroes_aliados_cercanos(npcBot, mana:GetCastRange());
         if target ~= nil then
             print('MANA!');
@@ -49,7 +49,7 @@ function heroes_aliados_cercanos(npcBot, rango)
     if #heroes == 0 then
         return nil, 0;
     end
-    print(#heroes)
+
     if heroes == nil or #heroes == 1 then
         return npcBot, value;
     end
