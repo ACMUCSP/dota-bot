@@ -30,7 +30,7 @@ function Think()
     local weakest = SearchWeakestCreep(creeps, 0.5)
     if weakest ~= nil then
         bot:Action_AttackUnit(weakest, false);
-        print('Creeping');
+        print(bot:GetPlayerID() .. ' Creeping');
         lastTimeHit = DotaTime();
         return;
     end
@@ -39,8 +39,8 @@ function Think()
     weakest = SearchWeakestCreep(creeps, 0.2)
     if weakest ~= nil then
         bot:Action_AttackUnit(weakest, false);
+        print(bot:GetPlayerID() .. 'Denying');
         lastTimeHit = DotaTime();
-        print('Denying');
     end
 end
 
