@@ -5,16 +5,24 @@ function AbilityUsageThink()
 
     local wave = npcBot:GetAbilityByName("keeper_of_the_light_illuminate");
     local stopWave = npcBot:GetAbilityByName("keeper_of_the_light_illuminate_end");
-
     local mana = npcBot:GetAbilityByName("keeper_of_the_light_chakra_magic");
 
 
     local creeps = npcBot:GetNearbyCreeps(1500, true)
-
+	local enemyHeroes = npcBot:GetNearbyHeroes(600, true, BOT_MODE_NONE)
+	
     if DotaTime() < lastTime + 2 then
         return;
     end
 
+	if npcBot:IsChanneling() then
+		if #enemyHeroes >= 2 or npcBot:GetActiveMode() == BOT_MODE_EVASIVE_MANEUVERS  or npcBot:GetActiveMode() == BOT_MODE_RETREAT then
+			return npcBot:Action_UseAbility(stopWave);
+		else
+			return;
+		end
+	end
+	
     if wave:IsFullyCastable() and not wave:IsChanneling()
             and npcBot:GetMana() > wave:GetManaCost() and npcBot:GetActiveMode() ~= BOT_MODE_RETREAT then
         if #creeps >= 3 then
@@ -52,7 +60,6 @@ end
 function heroes_aliados_cercanos(npcBot, rango)
 
     local heroes = npcBot:GetNearbyHeroes(rango, false, BOT_MODE_ATTACK);
-
     local value = npcBot['GetMana'](npcBot);
 
     if #heroes == 0 then
@@ -65,11 +72,8 @@ function heroes_aliados_cercanos(npcBot, rango)
 
     local hero;
     for _, h in pairs(heroes) do
-
         if h ~= nil and h:IsAlive() then
-
             local valueToCompare = h['GetMana'](h);
-
             if valueToCompare < value then
                 value = valueToCompare;
                 hero = h;
